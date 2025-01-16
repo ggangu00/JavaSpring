@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.board.mapper.ReplyMapper">
+
+	<!-- 등록 -->
+	<insert id="insert" parameterType="ReplyDTO">
+		INSERT INTO tbl_reply (
+			rno,
+			bno,
+			reply,
+			replyer,
+			replyDate
+		)
+		VALUES (
+			seq_reply.nextval,
+			#{bno},
+			#{reply},
+			#{replyer},
+			#{replyDate},
+		)
+		
+	</insert>
+	
+	
+	<!-- 수정 -->
+	<update id="update" parameterType="ReplyDTO">
+		update tbl_reply
+		set reply = #{reply},
+		    replyer = #{replyer},
+		    updateDate = sysdate
+		where rno = #{rno}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="Long">
+		delete from tbl_reply
+		where rno = #{rno}
+	</delete>
+	
+	
+	<!-- 단건조회 -->
+	<select id="read" parameterType="Long">
+		select rno,
+			   bno,
+		       reply,
+		       replyer,
+		       replyDate
+		from tbl_reply
+		where rno = #{rno}
+	</select>
+	
+	
+	<!-- 전체조회 -->
+	<select id="getList" resultType="ReplyDTO">
+	<![CDATA[
+	    select
+	     	   rno,
+			   bno,
+		       reply,
+		       replyer,
+		       replyDate,
+		       updatedate
+	   	from tbl_reply 
+	    WHERE bno=#{bno}
+	    and rno > 0
+	    ]]>
+	</select>
+	
+	<!-- 카운트 -->
+	<select id="getCountByBno" resultType="int">
+	  <![CDATA[
+	  select count(rno)
+	  from tbl_reply
+	  where bno=#{bno}
+	  ]]>
+	</select>
+</mapper>
