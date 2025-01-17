@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.board.mapper.BoardMapper">
+
+	<!-- 등록 -->
+	<insert id="insert" parameterType="boardDTO">
+		INSERT INTO tbl_board (
+			bno,
+			title,
+			content,
+			writer
+		)
+		VALUES (
+			seq_board.nextval,
+			#{title},
+			#{content},
+			#{writer}
+		)
+		
+	</insert>
+	
+	
+	<!-- 수정 -->
+	<update id="update" parameterType="boardDTO">
+		update tbl_board
+		set title = #{title},
+		    content = #{content},
+		    writer = #{writer},
+		    updateDate = sysdate
+		where bno = #{bno}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="Long">
+		delete from tbl_board
+		where bno = #{bno}
+	</delete>
+	
+	
+	<!-- 단건조회 -->
+	<select id="read" parameterType="Long">
+		select bno,
+		       title,
+		       content,
+		       writer,
+		       regdate,
+		       replycnt
+		from tbl_board
+		where bno = #{bno}
+	</select>
+	
+	
+	<!-- 전체조회 -->
+	<select id="getList" parameterType="int" resultType="BoardDTO">
+		SELECT * FROM (
+		    select /*+index_desc(TBL_BOARD PK_BOARD)*/ 
+		    	   ROWNUM RN, 
+		    	   BNO, 
+		    	   TITLE, 
+		    	   WRITER,
+		    	   REGDATE,
+		    	   replycnt
+		   	from tbl_board 
+		    <![CDATA[
+		    WHERE ROWNUM <=#{end}
+		    ]]>
+		    
+		    <include refid="criteria"></include>
+		    
+		) WHERE RN >= #{start}		
+	</select>
+	
+	<update id="updateReplyCnt" parameterType="boardDTO">
+		update tbl_board set replycnt = replycnt + #{amount} where bno=#{bno}
+	</update>
+	
+	<!-- 카운트 -->
+	<select id="getCount" resultType="int">
+	  SELECT COUNT(*) FROM TBL_BOARD
+	  <where>
+	  	<include refid="criteria"></include>
+	  </where>
+	</select>
+	
+	
+	
+	<sql id="criteria">
+		<if test="keyword != null and ! keyword.equals('')">
+			<trim prefix="and (" suffix=") " prefixOverrides="or">
+				<foreach item="type" collection="typeArr">
+					<trim prefix="or"></trim>
+					<choose>
+						<!-- type.equals('T') 또는 겉에 홑따옴표, 안에 쌍따옴표 쓰기 -->
+						<when test="type == 'T'.toString()">TITLE LIKE '%' || #{keyword} || '%'</when>
+						<when test="type == 'C'.toString()">CONTENT LIKE '%' || #{keyword} || '%'</when>
+						<when test="type == 'W'.toString()">WRITER LIKE '%' || #{keyword} || '%'</when>
+					
+					</choose>
+					
+					<!-- 
+					<if test="type == 'T'">
+						AND TITLE LIKE '%' || #{keyword} || '%'
+					</if>
+					 -->	
+					
+				</foreach>    
+			</trim>	
+	    </if>
+	</sql>
+</mapper>
