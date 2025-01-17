@@ -8,15 +8,13 @@
 			rno,
 			bno,
 			reply,
-			replyer,
-			replyDate
+			replyer
 		)
 		VALUES (
 			seq_reply.nextval,
 			#{bno},
 			#{reply},
-			#{replyer},
-			#{replyDate},
+			#{replyer}
 		)
 		
 	</insert>
@@ -26,16 +24,20 @@
 	<update id="update" parameterType="ReplyDTO">
 		update tbl_reply
 		set reply = #{reply},
-		    replyer = #{replyer},
 		    updateDate = sysdate
 		where rno = #{rno}
 	</update>
 	
 	
-	<!-- 삭제 -->
-	<delete id="delete" parameterType="Long">
+	<!-- 댓글삭제 -->
+	<delete id="delete">
 		delete from tbl_reply
 		where rno = #{rno}
+	</delete>
+	
+	<delete id="deleteByBno">
+		delete from tbl_reply
+		where bno = #{bno}
 	</delete>
 	
 	
@@ -53,8 +55,9 @@
 	
 	<!-- 전체조회 -->
 	<select id="getList" resultType="ReplyDTO">
-	<![CDATA[
-	    select
+	SELECT * FROM (
+	    select /*+index_desc(tbl_reply PK_reply)*/
+	    	   ROWNUM rn,
 	     	   rno,
 			   bno,
 		       reply,
@@ -62,9 +65,13 @@
 		       replyDate,
 		       updatedate
 	   	from tbl_reply 
+	   	
 	    WHERE bno=#{bno}
-	    and rno > 0
-	    ]]>
+	    	  and rno >  0
+	   	
+	   		and ROWNUM <![CDATA[ <= ]]> #{cri.end}
+	   
+	   ) WHERE rn >= #{cri.start}
 	</select>
 	
 	<!-- 카운트 -->

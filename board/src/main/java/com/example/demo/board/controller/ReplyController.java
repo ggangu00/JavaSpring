@@ -19,10 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/replies/")
+@RequestMapping("/replies")
 @AllArgsConstructor
 public class ReplyController {
-	private final ReplyService service;
+	private ReplyService service;
 	
 	//등록처리
 	@PostMapping("/new")
@@ -71,10 +71,10 @@ public class ReplyController {
 	
 	//댓글목록조회 localhost:81/replies/pages/321/1
 	@GetMapping("/pages/{bno}/{page}")
-	public ReplyPageDTO get(@PathVariable(name="page") int page,
+	public ReplyPageDTO getList(@PathVariable(name="page") int page,
 							@PathVariable(name="bno") Long bno) {
 		
-		ReplySearchDTO replySearchDTO = new ReplySearchDTO(page, 10);
+		ReplySearchDTO replySearchDTO = new ReplySearchDTO(page, 3);
 		
 		return service.getList(replySearchDTO, bno);
 	}

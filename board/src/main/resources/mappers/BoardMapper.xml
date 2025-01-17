@@ -44,7 +44,8 @@
 		       title,
 		       content,
 		       writer,
-		       regdate
+		       regdate,
+		       replycnt
 		from tbl_board
 		where bno = #{bno}
 	</select>
@@ -58,7 +59,8 @@
 		    	   BNO, 
 		    	   TITLE, 
 		    	   WRITER,
-		    	   REGDATE
+		    	   REGDATE,
+		    	   replycnt
 		   	from tbl_board 
 		    <![CDATA[
 		    WHERE ROWNUM <=#{end}
@@ -68,6 +70,10 @@
 		    
 		) WHERE RN >= #{start}		
 	</select>
+	
+	<update id="updateReplyCnt" parameterType="boardDTO">
+		update tbl_board set replycnt = replycnt + #{amount} where bno=#{bno}
+	</update>
 	
 	<!-- 카운트 -->
 	<select id="getCount" resultType="int">

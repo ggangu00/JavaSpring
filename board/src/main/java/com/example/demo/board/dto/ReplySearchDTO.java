@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReplySearchDTO {
-	int page;
-	int amount;
+	int page = 1;
+	int amount = 3;
 	
 	public int getStart() {
 		return (page-1)*amount +1;

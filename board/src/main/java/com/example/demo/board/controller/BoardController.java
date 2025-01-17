@@ -34,8 +34,6 @@ public class BoardController {
 	public void list(Model model, 
 					 BoardSearchDTO searchDTO,
 					 Paging paging) {
-
-	  log.info("list");
 	  
 	  //페이징처리
 	  paging.setTotalRecord(service.getCount(searchDTO));
@@ -75,10 +73,8 @@ public class BoardController {
 	public void modify(@RequestParam(name="bno") Long bno, Model model) {
 		BoardDTO board = service.get(bno);		
 		model.addAttribute("board", board);
-		
-		log.info("asdfadfdf"+replyService.getList(null, bno).getList());
-		
-		model.addAttribute("replyList", replyService.getList(new ReplySearchDTO(), bno).getList());
+			
+		//model.addAttribute("replyList", replyService.getList(new ReplySearchDTO(), bno).getList());
 		
 	}
 	
