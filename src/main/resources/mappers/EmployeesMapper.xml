@@ -26,6 +26,21 @@
 		)		
 	</insert>
 	
+	<!-- 수정 -->
+	<update id="update" parameterType="boardDTO">
+		update employees
+		set last_name = #{lastName},
+		    first_name = #{firstName},
+		    email = #{email},
+		    job_id = #{jobId}
+		where employee_id = #{employeeId}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="Long">
+		delete from employees
+		where employee_id = #{employeeId}
+	</delete>	
 	
 	<!-- 단건조회 -->
 	<select id="read" parameterType="Long">
@@ -43,7 +58,9 @@
 	
 	<!-- 전체조회 -->
 	<select id="getList" parameterType="int" resultType="EmployeesDTO">
+		SELECT * FROM (
 		   select /*+index_desc(employees EMP_EMP_ID_PK)*/
+		   			ROWNUM RN, 
 		    	    employee_id,
 					first_name,
 					last_name,
@@ -52,9 +69,23 @@
 					job_id,
 					department_id
 		   	from employees 	
+		   	<![CDATA[
+		    WHERE ROWNUM <=#{end}
+		    ]]>
+		    <include refid="criteria"></include>
+		    
+		) WHERE RN >= #{start}	
 	</select>
 	
-	<!-- 전체조회 -->
+	<!-- 카운트 -->
+	<select id="getCount" resultType="int">
+	  SELECT COUNT(*) FROM employees
+	  <where>
+	  	<include refid="criteria"></include>
+	  </where>
+	</select>
+	
+	<!-- JOB 전체조회 -->
 	<select id="getListByJob" parameterType="int" resultType="JobsDTO">
 		   select job_id,
 				  job_title,
@@ -62,4 +93,20 @@
 				  min_salary
 		   	from jobs 	
 	</select>
+	
+	<sql id="criteria">
+		<if test="keyword != null and ! keyword.equals('')">
+			<trim prefix="and (" suffix=") " prefixOverrides="or">
+				<foreach item="type" collection="typeArr">
+					<trim prefix="or"></trim>
+					<choose>
+						<!-- type.equals('T') 또는 겉에 홑따옴표, 안에 쌍따옴표 쓰기 -->
+						<when test="type == 'N'.toString()">LAST_NAME LIKE '%' || #{keyword} || '%'</when>
+						<when test="type == 'J'.toString()">JOB_ID LIKE '%' || #{keyword} || '%'</when>
+					
+					</choose>
+				</foreach>    
+			</trim>	
+	    </if>
+	</sql>
 </mapper>

@@ -23,6 +23,16 @@ public class EmployeesServiceImpl implements EmployeesService{
 	}
 	
 	@Override
+	public boolean modify(EmployeesDTO employee) {
+		return employeesMapper.update(employee) == 1 ? true : false;
+	}
+
+	@Override
+	public boolean remove(Long employeeId) {
+		return employeesMapper.delete(employeeId) == 1 ? true : false;
+	}
+	
+	@Override
 	public EmployeesDTO get(Long employeeId) {
 		return employeesMapper.read(employeeId);
 	}
@@ -35,5 +45,10 @@ public class EmployeesServiceImpl implements EmployeesService{
 	@Override
 	public List<JobsDTO> getListByJob() {
 		return employeesMapper.getListByJob();
+	}
+	
+	@Override
+	public int getCount(EmployeesSearchDTO searchDTO) {
+		return employeesMapper.getCount(searchDTO);
 	}
 }

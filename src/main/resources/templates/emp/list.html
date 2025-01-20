@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -8,35 +8,113 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
+	
+	<script th:inline="javascript">
+	const result = [[${result}]];
+	const modify = [[${modify}]];
+	const remove = [[${remove}]];
+	
+	if(result){
+		alert("등록완료");
+	}
+	if(modify){
+		alert("수정완료");
+	}
+	if(remove){
+		alert("삭제완료");
+	}
+		
+	window.addEventListener("DOMContentLoaded", function(){		
+		
+		btnRegister.addEventListener("click", ()=>{
+			location.href='register';
+		})
+	})
+	
+	function gopage(p){
+		searchForm.page.value = p;
+		searchForm.submit();		
+	}
+			
+</script>
 </head>
-<body>
-<div class="container">
-	<div class="row">
-		<div class="col">
-			<h2>사원 목록</h2>
-			<table class="table text-center">
-				<thead>
-					<tr>
-						<th class="text-center">사번</th>
-						<th class="text-center">이름</th>
-						<th class="text-center">JOB</th>
-						<th class="text-center"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="emp : ${list}">
-						<td class="text-center" th:text="${emp.employeeId}">100</td>
-						<td class="text-center" th:text="${emp.firstName}">홍길동</td>
-						<td class="text-center" th:text="${emp.jobId}">PROGRAMER</td>
-						<td class="text-center">
-							<button class="btnUpd">조회</button>
-							<button class="btnDel">삭제</button>
-						</td>
-					</tr>	
-				</tbody>
-			</table>
-		</div>
+<body class="bg-body-tertiary">
+	<div class="px-5 py-6 my-5 text-center" layout:fragment="content">
+	
+	<div class="py-5 text-center">
+		<h2>사원 목록</h2>
 	</div>
+	
+	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+		<button type="button" id="btnRegister" class="btn btn-primary mb-3">사원등록</button>
+	</div>
+	
+	<!-- 검색 시작 -->
+	<form name="searchForm" action="/emp/list" 
+		  method="get" class="row g-4 mb-3" th:object="${employeesSearchDTO}">
+		<input type="hidden" name="page" value="1"/>
+		<div class="col-auto">
+			<select class="form-select" th:field="*{type}">
+				<option value="">선택해주세요</option>
+				<option value="N">이름</option>
+				<option value="J">JOB</option>		
+			</select>
+		</div>
+		<div class="col-auto">
+			<input type="text" class="form-control" th:field="*{keyword}" placeholder="검색어를 입력해주세요"/>
+		</div>				
+		<div class="col-auto">
+			<select class="form-select" th:field="*{pageUnit}" >
+				<option value="10">10건씩 조회</option>
+				<option value="25">25건씩 조회</option>
+				<option value="50">50건씩 조회</option>
+				<option value="100">100건씩 조회</option>
+			</select>
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-secondary">검색</button>
+		</div>		
+	</form>
+	<!-- 검색 종료 -->
+		
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="text-center">사번</th>
+				<th class="text-center">이름</th>
+				<th class="text-center">JOB</th>
+				<th class="text-center">관리</th>
+			</tr>
+		</thead>
+		<tbody class="empList">
+			<tr th:each="emp : ${list}" class="align-middle">
+				<td class="text-center" th:text="${emp.employeeId}"></td>
+				<td class="text-center" th:text="${emp.firstName}"></td>
+				<td class="text-center" th:text="${emp.jobId}"></td>
+				<td class="text-center">
+					<button class="btn btn-success btn-sm btnUpd" th:onclick="|location.href='get?employeeId=${emp.employeeId}'|">조회</button>
+					<button class="btn btn-danger btn-sm btnDel" th:onclick="|location.href='remove?employeeId=${emp.employeeId}'|">삭제</button>
+				</td>
+			</tr>	
+		</tbody>
+	</table>
+	
+	<!-- 페이징 시작 -->		 
+	<nav aria-label="...">
+	  <ul class="pagination">
+	    <li class="page-item" th:classappend="${paging.startPage} == 1 ? disabled">
+	        <a class="page-link" th:href="|javascript:gopage(${paging.startPage}-1)|">Previous</a></li>
+
+	    <li th:each="num : *{#numbers.sequence(paging.startPage, paging.endPage)}"
+	        class="page-item"
+	        th:classappend="${num} == ${paging.page} ? active">
+	        <a class="page-link" th:href="|javascript:gopage(${num})|"  th:text="${num}">2</a></li>
+
+	    <li class="page-item" th:classappend="${paging.endPage} >= ${paging.lastPage} ? disabled">
+	        <a class="page-link" th:href="|javascript:gopage(${paging.endPage}+1)|">Next</a></li>
+	  </ul>
+	</nav>
+	<!-- 페이징 종료 -->
 		
 </div>
 
