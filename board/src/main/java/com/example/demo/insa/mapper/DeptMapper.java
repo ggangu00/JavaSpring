@@ -2,6 +2,7 @@ package com.example.demo.insa.mapper;
 
 import java.util.List;
 
+import com.example.demo.board.dto.BoardSearchDTO;
 import com.example.demo.insa.dto.DeptDTO;
 import com.example.demo.insa.dto.DeptSearchDTO;
 

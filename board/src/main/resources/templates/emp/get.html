@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<title>사원 상세보기</title>
+
+<script th:inline="javascript">
+
+const employeeId = [[${emp.employeeId}]]  //게시글번호
+
+window.addEventListener("DOMContentLoaded", function(){
+	
+	btnList.addEventListener("click", ()=>{
+		location.href='list';
+	})
+})
+</script>
+
+</head>
+<body class="bg-body-tertiary">
+	<div class="px-5 py-6 my-5 text-center" layout:fragment="content">
+		<div class="py-5 text-center">
+	      <h2>사원 상세보기</h2>
+	    </div>
+	    
+	    <hr class="my-4">
+	    
+	    <table class="table table-striped-columns border">
+	    	<colgroup><col width="20%"><col></colgroup>
+			<tbody>
+				<tr>
+					<th>번호</th>
+					<td th:text="${emp.employeeId}"></td>
+				</tr>
+				<tr>
+					<th>이름</th>
+					<td th:text="${emp.lastName}"></td>
+				</tr>
+				<tr>
+					<th>이메일</th>
+					<td th:text="${emp.email}"></td>
+				</tr>
+				<tr>
+					<th>입사일</th>
+					<td th:text="${emp.hireDate}"></td>
+				</tr>
+			</tbody>
+		</table>
+  
+	  <hr class="my-4">
+  	  <div class="d-grid gap-2 d-md-block">		  		  
+  		  <button class="btn btn-primary" th:onclick="|location.href='modify?employeeId=${emp.employeeId}'|">수정</button>
+  		  <button class="btn btn-danger" th:onclick="|location.href='remove?employeeId=${emp.employeeId}'|">삭제</button>
+  		  <button type="button" id="btnList" class="btn btn-secondary">목록</button>
+ 	  </div>
+		
+	</div>
+</body>
+</html>
