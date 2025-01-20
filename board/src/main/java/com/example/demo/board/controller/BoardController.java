@@ -16,6 +16,7 @@ import com.example.demo.board.dto.BoardSearchDTO;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.ReplyService;
 import com.example.demo.common.Paging;
+import com.example.demo.securingweb.SecuUtil;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,12 @@ public class BoardController {
 
 	@Autowired
 	HttpSession session;
+	
+	@GetMapping("/home")
+	public void home() {				
+		log.info("userDetails : " + SecuUtil.getUser().getDeptName());
+		log.info("session : "+session.getAttribute("deptName"));
+	}
 	
 	//게시글 전체조회
 	@GetMapping("/list")
