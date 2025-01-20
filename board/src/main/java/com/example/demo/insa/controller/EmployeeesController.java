@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.board.dto.BoardDTO;
 import com.example.demo.common.Paging;
 import com.example.demo.insa.dto.EmployeesDTO;
 import com.example.demo.insa.dto.EmployeesSearchDTO;
@@ -48,6 +49,7 @@ public class EmployeeesController {
 		model.addAttribute("emp", employee);
 		
 		model.addAttribute("jobList", eService.getListByJob());
+		model.addAttribute("deptList", eService.getListByDept());
 	}
 	
 	//사원 등록처리
@@ -60,6 +62,7 @@ public class EmployeeesController {
 			return "emp/register";
 		}
 		  
+		log.info("employee: " + employee);	
 		eService.register(employee);
 	  
 	  rttr.addFlashAttribute("result", true);

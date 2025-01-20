@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class EmployeesDTO {	
 	private Long employeeId;
 	private Long departmentId;
+	private String departmentName;
 	
 	@NotBlank(message = "이름을 입력해주세요")
 	private String firstName;
@@ -25,4 +26,5 @@ public class EmployeesDTO {
 	
 	private String hireDate;
 	private String jobId;
+	private String jobTitle;
 }
