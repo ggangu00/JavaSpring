@@ -2,6 +2,7 @@ package com.example.demo.insa.service;
 
 import java.util.List;
 
+import com.example.demo.insa.dto.DeptDTO;
 import com.example.demo.insa.dto.EmployeesDTO;
 import com.example.demo.insa.dto.EmployeesSearchDTO;
 import com.example.demo.insa.dto.JobsDTO;
@@ -17,5 +18,6 @@ public interface EmployeesService {
 	
 	public int getCount(EmployeesSearchDTO searchDTO);
 	public List<JobsDTO> getListByJob();
+	public List<DeptDTO> getListByDept();
 	
 }

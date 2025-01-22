@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.insa.dto.DeptDTO;
 import com.example.demo.insa.dto.EmployeesDTO;
 import com.example.demo.insa.dto.EmployeesSearchDTO;
 import com.example.demo.insa.dto.JobsDTO;
@@ -50,5 +51,10 @@ public class EmployeesServiceImpl implements EmployeesService{
 	@Override
 	public int getCount(EmployeesSearchDTO searchDTO) {
 		return employeesMapper.getCount(searchDTO);
+	}
+
+	@Override
+	public List<DeptDTO> getListByDept() {
+		return employeesMapper.getListByDept();
 	}
 }
