@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor //Builder, All, No 세투세투
 public class DeptDTO {
-	private Long departmentId;
+	private Long departmentId;	
+	private String departmentName;
+	private Long managerId;
 }

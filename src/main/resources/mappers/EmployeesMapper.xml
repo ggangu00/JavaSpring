@@ -15,13 +15,11 @@
 		)
 		VALUES (
 			seq_employees.nextval,
-			#{employeeId},
 			#{firstName},
 			#{lastName},
 			#{email},
 			#{hireDate},
 			#{jobId},
-			#{employeeId},
 			#{departmentId}
 		)		
 	</insert>
@@ -49,9 +47,12 @@
 				last_name,
 				email,
 				hire_date,
-				job_id,
-				department_id
-		from employees
+				job.job_id as job_id,
+       			job.job_title as job_title,
+				dept.department_id as department_id,
+				department_name as department_name
+		from employees emp join jobs job on emp.job_id=job.job_id
+						   join departments dept on emp.department_id=dept.department_id
 		where employee_id = #{employeeId}
 	</select>
 	
@@ -66,9 +67,12 @@
 					last_name,
 					email,
 					hire_date,
-					job_id,
-					department_id
-		   	from employees 	
+					job.job_id as job_id,
+       				job.job_title as job_title,
+					dept.department_id as department_id,
+					department_name as department_name
+		   	from employees emp join jobs job on emp.job_id=job.job_id
+		   					   join departments dept on emp.department_id=dept.department_id
 		   	<![CDATA[
 		    WHERE ROWNUM <=#{end}
 		    ]]>
@@ -94,6 +98,14 @@
 		   	from jobs 	
 	</select>
 	
+	<!-- 부서 전체조회 -->
+	<select id="getListByDept" parameterType="int" resultType="DeptDTO">
+		   select department_id,
+				  department_name,
+			      manager_id
+		   	from departments 	
+	</select>
+	
 	<sql id="criteria">
 		<if test="keyword != null and ! keyword.equals('')">
 			<trim prefix="and (" suffix=") " prefixOverrides="or">
@@ -102,7 +114,8 @@
 					<choose>
 						<!-- type.equals('T') 또는 겉에 홑따옴표, 안에 쌍따옴표 쓰기 -->
 						<when test="type == 'N'.toString()">LAST_NAME LIKE '%' || #{keyword} || '%'</when>
-						<when test="type == 'J'.toString()">JOB_ID LIKE '%' || #{keyword} || '%'</when>
+						<when test="type == 'D'.toString()">DEPARTMENT_NAME LIKE '%' || #{keyword} || '%'</when>
+						<when test="type == 'J'.toString()">JOB_TITLE LIKE '%' || #{keyword} || '%'</when>
 					
 					</choose>
 				</foreach>    
