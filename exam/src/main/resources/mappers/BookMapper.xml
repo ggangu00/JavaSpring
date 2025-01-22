@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.book.mapper.BookMapper">
+
+	<!-- 등록 -->
+	<insert id="insert" parameterType="bookDTO">
+		INSERT INTO book_tbl_06 (
+			BOOK_NO,
+			BOOK_NAME,
+			BOOK_COVERIMG,
+			BOOK_DATE,
+			BOOK_PRICE,
+			BOOK_PUBLISHER,
+			BOOK_INFO
+			
+		)
+		VALUES (
+			seq_book.nextval,
+			#{bookName},
+			#{bookCoverimg},
+			#{bookDate},
+			#{bookPrice},
+			#{bookPublisher},
+			#{bookInfo}
+		)
+		
+	</insert>
+	
+	
+	<!-- 수정 -->
+	<update id="update" parameterType="bookDTO">
+		update book_tbl_06
+		set BOOK_NAME = #{bookName},
+		    BOOK_COVERIMG = #{bookCoverimg},
+		    BOOK_DATE = #{bookDate},
+		    BOOK_PRICE = #{bookPrice},
+		    BOOK_PUBLISHER = #{bookPublisher},
+		    BOOK_INFO = #{bookInfo}
+		where BOOK_NO = #{bookNo}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="Long">
+		delete from book_tbl_06
+		where BOOK_NO = #{bookNo}
+	</delete>
+	
+	
+	<!-- 단건조회 -->
+	<select id="read" parameterType="Long">
+		select  BOOK_NO,
+				BOOK_NAME,
+				BOOK_COVERIMG,
+				BOOK_DATE,
+				BOOK_PRICE,
+				BOOK_PUBLISHER,
+				BOOK_INFO
+		from book_tbl_06
+		where BOOK_NO = #{bookNo}
+	</select>
+	
+	
+	<!-- 전체조회 -->
+	<select id="getList" parameterType="int" resultType="BookDTO">
+	    select BOOK_NO,
+			   BOOK_NAME,
+			   BOOK_COVERIMG,
+			   BOOK_DATE,
+			   BOOK_PRICE,
+			   BOOK_PUBLISHER,
+			   BOOK_INFO
+	   	from book_tbl_06 		    
+	</select>
+	
+	<!-- 대여정보 조회 -->
+	<select id="getRentList" parameterType="int" resultType="BookDTO">
+	select book.BOOK_NO as book_no,
+	    BOOK_NAME,
+	    rent_price,
+	    rent_cnt
+	    from book_tbl_06 book 
+	join (select book_no, sum(rent_price) as rent_price, count(*) as rent_cnt from rent_tbl_06 group by book_no) rent on book.book_no=rent.book_no
+	</select>
+	
+	
+	
+</mapper>
